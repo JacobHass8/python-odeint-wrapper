@@ -1,6 +1,6 @@
 import sys 
 sys.path.append("./builddir")
-import cheese
+import pyodeint
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.integrate import solve_ivp
@@ -20,7 +20,7 @@ def p2dq(vals):
 
 
 s = time.time()
-data = cheese.py_solve(dt, t0, tn, q0, p0, q2dp, p2dq)
+data = pyodeint.py_solve(dt, t0, tn, q0, p0, q2dp, p2dq)
 print(time.time() - s)
 def dx(t, x):
     return np.array([x[1], -x[0]])

@@ -5,32 +5,10 @@
 #include <utility>
 
 using namespace boost::numeric::odeint;
-typedef std::vector<double> (*cheesefunc)(char *name, void *user_data);
 typedef std::vector<double> (*derv_func)(std::vector<double> vec);
 typedef std::vector<double> (*py_derv_func)(std::vector<double> vec, void *user_data);
 typedef std::pair<std::vector<double>, std::vector<double> > state_t;
 typedef symplectic_rkn_sb3a_mclachlan<std::vector<double> > stepper_type;
-typedef std::tuple<
-    std::vector<std::vector<double> >, 
-    std::vector<std::vector<double> >, 
-    std::vector<double>> result;
-
-static char *cheeses[] = {
-  "cheddar",
-  "camembert",
-  "that runny one",
-  0
-};
-
-void find_cheeses(cheesefunc user_func, void *user_data) {
-  char **p = cheeses;
-  std::vector<double> val;
-  auto new_user_func = std::bind(user_func, std::placeholders::_1, user_data);
-  while (*p) {
-    val = new_user_func(*p);
-    ++p;
-  }
-}
 
 template <class FuncType>
 struct D_wrapper {

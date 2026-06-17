@@ -1,12 +1,6 @@
-#
-#   Cython wrapper for the cheesefinder API
-#
 from libcpp.vector cimport vector
 
-cdef extern from "cheesefinder.h":
-    ctypedef vector[double] (*cheesefunc)(char *name, void *user_data)
-    void find_cheeses(cheesefunc user_func, void *user_data)
-
+cdef extern from "pyodeint.h":
     ctypedef vector[double] (*py_derv_func)(vector[double] vec, void *user_data)
     
     cdef cppclass ResultCpp:
@@ -61,12 +55,6 @@ cdef PyMyClass_from_ptr(ResultCpp* ptr, bint owner=True):
 def py_solve(dt, t0, tn, q0, p0, f, g):
     cdef ResultCpp* raw_ptr = solve_ivp_symplectic(dt, t0, tn, q0, p0, vector_callback, <void*>f, vector_callback, <void*>g)
     return PyMyClass_from_ptr(raw_ptr, owner=True)
-
-def find(f):
-    find_cheeses(callback, <void*>f)
-
-cdef vector[double] callback(char *name, void *f) noexcept:
-    return (<object>f)(name.decode('utf-8'))
 
 cdef vector[double] vector_callback(vector[double] vec, void *f) noexcept:
     return (<object>f)(vec)
